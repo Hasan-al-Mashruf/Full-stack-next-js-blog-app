@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     User?   @relation(fields: [userId], references: [id])
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+  @@id([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String     @default(cuid()) @id
+  name          String
+  email         String     @unique
+  password      String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  blogs         Blog[]
+  sessions      Session[]
+  accounts      Account[]
+  follower      Follow[]  @relation("UserFollowers")
+  following     Follow[]  @relation("UserFollowing")
+  comment       Comment[]
+  like          Like[]
+  reporter      Report[]  @relation("UserReporter")
+  reported      Report[]  @relation("UserReported")
+  followingCat  Category[]
+}
+
+model Follow {
+  followerId   String
+  followingId  String
+  follower     User @relation("UserFollowers", fields: [followerId], references: [id])
+  following    User @relation("UserFollowing", fields: [followingId], references: [id])
+  @@id([followerId, followingId])
+  @@unique([followerId, followingId])
+  @@map(name: "follow")
+}
+
+model Blog {
+  id          String     @default(cuid()) @id
+  title       String     @unique
+  content     String
+  featuredImg String
+  published   Boolean   @default(false)
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  like        Like[]
+  categories Category[]
+  comments   Comment[]
+}
+
+model Category {
+  id           String  @default(cuid()) @id
+  name         String @unique
+  blog         Blog[]
+  FollowedUser User[]
+}
+
+model Comment {
+  id          String     @default(cuid()) @id
+  content     String 
+  blogId      String
+  userId      String
+  blog        Blog       @relation(fields: [blogId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+}
+
+model Like {
+  id          String     @default(cuid()) @id
+  blogId      String
+  userId      String
+  blog        Blog       @relation(fields: [blogId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now()) @map(name: "created_at")
+}
+
+model Report {
+  reporterId   String
+  reportedId   String
+  reporter      User     @relation("UserReporter", fields: [reporterId], references: [id])
+  reported      User     @relation("UserReported", fields: [reportedId], references: [id])
+  @@id([reporterId ,reportedId])
+  @@unique([reporterId ,reportedId])
+}
