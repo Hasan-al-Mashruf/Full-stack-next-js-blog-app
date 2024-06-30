@@ -53,8 +53,6 @@ model User {
   password      String?
   image         String?
   emailVerified DateTime?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   blogs         Blog[]
   sessions      Session[]
   accounts      Account[]
@@ -65,16 +63,19 @@ model User {
   reporter      Report[]  @relation("UserReporter")
   reported      Report[]  @relation("UserReported")
   followingCat  Category[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Follow {
+  id           String   @id @default(cuid())
   followerId   String
   followingId  String
   follower     User @relation("UserFollowers", fields: [followerId], references: [id])
   following    User @relation("UserFollowing", fields: [followingId], references: [id])
-  @@id([followerId, followingId])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   @@unique([followerId, followingId])
-  @@map(name: "follow")
 }
 
 model Blog {
@@ -83,18 +84,22 @@ model Blog {
   content     String
   featuredImg String
   published   Boolean   @default(false)
-  user      User      @relation(fields: [userId], references: [id])
-  userId    String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
   like        Like[]
-  categories Category[]
-  comments   Comment[]
+  categories  Category[]
+  comments    Comment[]
+  createdAt   DateTime  @default(now()) 
+  updatedAt   DateTime  @updatedAt
 }
 
 model Category {
-  id           String  @default(cuid()) @id
-  name         String @unique
+  id           String    @default(cuid()) @id
+  name         String    @unique
   blog         Blog[]
   FollowedUser User[]
+  createdAt    DateTime  @default(now()) 
+  updatedAt    DateTime  @updatedAt
 }
 
 model Comment {
@@ -104,6 +109,9 @@ model Comment {
   userId      String
   blog        Blog       @relation(fields: [blogId], references: [id])
   user        User       @relation(fields: [userId], references: [id])
+  createdAt     DateTime  @default(now()) 
+  updatedAt     DateTime  @updatedAt
+  @@unique([blogId ,userId])
 }
 
 model Like {
@@ -112,14 +120,18 @@ model Like {
   userId      String
   blog        Blog       @relation(fields: [blogId], references: [id])
   user        User       @relation(fields: [userId], references: [id])
-  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  createdAt     DateTime  @default(now()) 
+  updatedAt     DateTime  @updatedAt
+  @@unique([blogId ,userId])
 }
 
 model Report {
+  id           String     @default(cuid()) @id
   reporterId   String
   reportedId   String
   reporter      User     @relation("UserReporter", fields: [reporterId], references: [id])
   reported      User     @relation("UserReported", fields: [reportedId], references: [id])
-  @@id([reporterId ,reportedId])
+  createdAt     DateTime  @default(now()) 
+  updatedAt     DateTime  @updatedAt
   @@unique([reporterId ,reportedId])
 }
