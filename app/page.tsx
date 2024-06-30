@@ -1,9 +1,16 @@
-import Image from "next/image";
+import RecentBlogs from "@/components/RecentBlogs/RecentBlogs";
+import { Suspense } from "react";
+import Loading from "./loading";
 
-export default function Home() {
+const Home = () => {
   return (
-    <>
-      <h2>Hlw world</h2>
-    </>
+    <div>
+      <h2>This is Home Page</h2>
+      <Suspense fallback={<Loading />}>
+        <RecentBlogs />
+      </Suspense>
+    </div>
   );
-}
+};
+
+export default Home;
