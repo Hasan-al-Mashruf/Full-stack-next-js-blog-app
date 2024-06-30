@@ -64,7 +64,7 @@ export async function POST(req: Request, { params }: { params: IParams }) {
     await prisma.like.create({
       data: {
         blogId: existingBlog.id,
-        userId: "cly0d4p2s000010iiemhdoe8v",
+        userId: user.id,
       },
     });
 

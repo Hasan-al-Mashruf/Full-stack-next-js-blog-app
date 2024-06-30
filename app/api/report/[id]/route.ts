@@ -28,8 +28,8 @@ export async function POST(req: Request, { params }: { params: IParams }) {
 
     await prisma.report.create({
       data: {
-        reporterId: existingUser.id,
-        reportedId: "cly0d4p2s000010iiemhdoe8v",
+        reportedId: existingUser.id,
+        reporterId: user.id,
       },
     });
 
