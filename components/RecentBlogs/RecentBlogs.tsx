@@ -4,7 +4,11 @@ import BlogCard from "../BlogCard/BlogCard";
 import { IBlog } from "@/types/types.global";
 
 const RecentBlogs = async () => {
-  const { data }: { data: IBlog[] | null } = await getRecentBlogs();
+  const recentBlogs = await getRecentBlogs();
+  if (!recentBlogs) {
+    return <div>Error loading blogs.</div>;
+  }
+  const { data } = recentBlogs;
   return (
     <div className="grid grdi-cols-4">
       <div className="col-span-3">

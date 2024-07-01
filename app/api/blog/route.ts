@@ -24,7 +24,6 @@ export async function POST(req: Request) {
 
     const requestData = await req.json();
     const parsedData = schema.parse(requestData);
-    console.log({ parsedData });
     const { title, content, featuredImg, categories } = parsedData;
 
     console.log({ title, content, featuredImg, categories });

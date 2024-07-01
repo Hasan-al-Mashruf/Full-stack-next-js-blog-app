@@ -2,6 +2,7 @@
 import { FC } from "react";
 import parse from "html-react-parser";
 import { IBlog } from "@/types/types.global";
+import Link from "next/link";
 
 const BlogCard: FC<{ blog: IBlog }> = ({ blog }) => {
   return (
@@ -28,7 +29,7 @@ const BlogCard: FC<{ blog: IBlog }> = ({ blog }) => {
             <span className="text-gray-900 font-medium">CodeX</span>
           </div>
           <div className="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">
-            {blog?.title}
+            <Link href={`/blog/${blog.id}`}> {blog?.title}</Link>
           </div>
           {parse(blog?.content)}
           <div className="flex items-center mt-4">
