@@ -1,10 +1,45 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import parse from "html-react-parser";
 import { IBlog } from "@/types/types.global";
 import Link from "next/link";
+import { postNewLike } from "@/apis/apis";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { isAxiosError } from "axios";
+import toast from "react-hot-toast";
 
-const BlogCard: FC<{ blog: IBlog }> = ({ blog }) => {
+const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const router = useRouter();
+  const postANewLike = async (blogId: string) => {
+    try {
+      const resposne = await postNewLike(blogId);
+      if (resposne.status) {
+        router.refresh();
+      }
+    } catch (error) {
+      console.log(error);
+      if (isAxiosError(error)) {
+        const response: any = error.response;
+        toast.error(response?.data?.message ?? "Something went wrong");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const checkLiked = () => {
+      if (Array.isArray(blog.like)) {
+        const liked = blog.like.some(
+          (likedUser) => likedUser.userId === user.id
+        );
+        setIsLiked(liked);
+      }
+    };
+
+    checkLiked();
+  }, [blog.like, user.id]);
+
   return (
     <div className=" bg-white rounded-xl shadow-md overflow-hidden mt-6 w-full">
       <div className="md:flex">
@@ -34,9 +69,9 @@ const BlogCard: FC<{ blog: IBlog }> = ({ blog }) => {
           {parse(blog?.content)}
           <div className="flex items-center mt-4">
             <span className="text-gray-500 text-sm">Apr 1</span>
-            <span className="ml-4 text-gray-500 text-sm">
+            <Button onClick={() => postANewLike(blog.id)} disabled={isLiked}>
               {blog?.like?.length} Like
-            </span>
+            </Button>
             <span className="ml-4 text-gray-500 text-sm">
               {" "}
               {blog?.comments?.length} comments
