@@ -12,6 +12,11 @@ export async function GET(req: Request, { params }: { params: IParams }) {
       include: {
         user: true,
         categories: true,
+        comments: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 

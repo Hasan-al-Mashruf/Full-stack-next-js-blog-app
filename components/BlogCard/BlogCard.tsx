@@ -36,7 +36,6 @@ const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
         setIsLiked(liked);
       }
     };
-
     checkLiked();
   }, [blog.like, user.id]);
 
@@ -72,10 +71,12 @@ const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
             <Button onClick={() => postANewLike(blog.id)} disabled={isLiked}>
               {blog?.like?.length} Like
             </Button>
-            <span className="ml-4 text-gray-500 text-sm">
-              {" "}
-              {blog?.comments?.length} comments
-            </span>
+            <Link href={`/blog/${blog.id}/#commentSection`}>
+              <span className="ml-4 text-gray-500 text-sm">
+                {" "}
+                {blog?.comments?.length} comments
+              </span>
+            </Link>
           </div>
         </div>
       </div>

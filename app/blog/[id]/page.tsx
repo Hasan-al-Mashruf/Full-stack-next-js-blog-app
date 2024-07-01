@@ -1,20 +1,23 @@
 import { getSingleBlog } from "@/apis/apis";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { IBlog, IParams } from "@/types/types.global";
+import { IBlog, ICategory, IParams } from "@/types/types.global";
 import parse from "html-react-parser";
 import React, { FC } from "react";
+import CommentCard from "@/components/Comment/CommentCard";
+import CommentForm from "@/components/Comment/CommentForm";
 
 const SingleBlogPage: FC<{ params: IParams }> = async ({ params }) => {
   const blogId = params?.id;
   const singleBlog = await getSingleBlog(blogId);
-
   if (!singleBlog) return <p>Error loading data</p>;
-  const { data } = singleBlog;
-
-  if (!Array.isArray(data.categories)) return null;
-
-  const categories = data?.categories.map((category) => category.name);
-
+  const { data } = singleBlog as any;
+  if (!Array.isArray(data.categories) && !Array.isArray(data.comments))
+    return null;
+  const categories = data?.categories.map(
+    (category: ICategory) => category.name
+  );
+  const comments = data.comments;
+  console.log(data.comments);
   return (
     <div className="mx-auto w-1/2 max-w-3xl flex flex-col gap-5">
       <h1 className="text-5xl font-bold capitalize">{data?.title}</h1>
@@ -37,6 +40,12 @@ const SingleBlogPage: FC<{ params: IParams }> = async ({ params }) => {
       </div>
 
       {parse((data as any).content)}
+      <div>
+        <CommentForm blogId={blogId} />
+        {comments.map((comment: any) => (
+          <CommentCard comment={comment} key={comment.id} />
+        ))}
+      </div>
     </div>
   );
 };
