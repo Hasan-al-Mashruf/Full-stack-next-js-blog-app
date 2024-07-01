@@ -7,6 +7,7 @@ import {
   ILike,
   IReport,
 } from "@/types/types.global";
+import { AxiosError } from "axios";
 
 // User API
 export const registerUser = async (userInfo: IUser): Promise<IUser> => {
@@ -21,8 +22,8 @@ export const getCategories = async (): Promise<ICategory[]> => {
 };
 
 // Blog API
-export const getRecentBlogs = async (): Promise<IBlog[]> => {
-  const response = await axiosInstance.get<IBlog[]>("/blog");
+export const getRecentBlogs = async (): Promise<{ data: IBlog[] | null }> => {
+  const response = await axiosInstance.get<{ data: IBlog[] | null }>("/blog");
   return response.data;
 };
 
@@ -31,8 +32,20 @@ export const getSingleBlog = async (blogId: number): Promise<IBlog> => {
   return response.data;
 };
 
-export const createNewBlog = async (blogInfo: IBlog): Promise<IBlog> => {
-  const response = await axiosInstance.post<IBlog>("/blog", blogInfo);
+interface IResponse<T = undefined> {
+  status: boolean;
+  message?: string;
+  data?: T;
+}
+
+export const createNewBlog = async (
+  blogInfo: Partial<IBlog>
+): Promise<IResponse<IBlog> | AxiosError<any>> => {
+  const response = await axiosInstance.post<IResponse<IBlog>>(
+    "/blog",
+    blogInfo
+  );
+  console.log({ response });
   return response.data;
 };
 
