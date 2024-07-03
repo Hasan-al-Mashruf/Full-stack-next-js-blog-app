@@ -56,7 +56,7 @@ const WriteABlogForm: FC<any> = ({ session, categories }) => {
 
       // Attempt to create new blog
       const response = await createNewBlog(newBlog);
-      console.log({ response });
+
       if (response.status) {
         toast.success("Blog created successfully");
         router.push("/");

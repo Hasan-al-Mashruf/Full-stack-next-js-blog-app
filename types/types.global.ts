@@ -1,6 +1,13 @@
 export interface IParams {
   id: string;
 }
+
+export interface IResponse<T = undefined> {
+  status: boolean;
+  message?: string;
+  data?: T | any;
+}
+
 export interface IUser {
   id: string;
   name: string;
@@ -18,6 +25,12 @@ export interface IUser {
   followingCat?: ICategory[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ISession {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
 }
 
 export interface IFollow {
