@@ -1,7 +1,6 @@
 import { prisma } from "../../../../lib/db";
 import { hash } from "bcrypt";
 import { NextResponse } from "next/server";
-import { IUser } from "@/types/types.global";
 
 export async function POST(req: Request) {
   try {
@@ -24,7 +23,7 @@ export async function POST(req: Request) {
       Number(process.env.SALT_ROUNDS)
     );
 
-    const user: IUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name,
         email,
@@ -32,14 +31,15 @@ export async function POST(req: Request) {
       },
     });
 
-    // exclude password from user...
-    const { password: _, ...responseUser } = user;
-    return NextResponse.json({ status: true, data: responseUser });
+    return NextResponse.json({ status: true });
   } catch (error) {
     console.error("Error creating user:", error);
-    return NextResponse.json({
-      status: false,
-      message: "Internal Server Error",
-    });
+    return NextResponse.json(
+      {
+        status: false,
+        message: "Internal Server Error",
+      },
+      { status: 400 }
+    );
   }
 }

@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -9,7 +9,7 @@ interface ICredential {
   email: string;
   password: string;
 }
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = NextAuth({
   // prisma adapter
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -55,5 +55,5 @@ const handler = NextAuth({
     signIn: "/login",
   },
 });
-
+const handler = authOptions;
 export { handler as GET, handler as POST };
