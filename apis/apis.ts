@@ -6,37 +6,17 @@ import {
   ICategory,
   ILike,
   IReport,
+  IResponse,
 } from "@/types/types.global";
 import { AxiosError } from "axios";
 
 // User API
-export const registerUser = async (userInfo: IUser): Promise<IUser> => {
-  const response = await axiosInstance.post<IUser>("/auth/register", userInfo);
+export const registerUser = async (
+  userInfo: Partial<IUser>
+): Promise<IResponse<any> | AxiosError<any>> => {
+  const response = await axiosInstance.post("/auth/register", userInfo);
   return response.data;
 };
-
-// Category API
-export const getCategories = async (): Promise<ICategory[]> => {
-  const response = await axiosInstance.get<ICategory[]>("/category");
-  return response.data;
-};
-
-// Blog API
-export const getRecentBlogs = async (): Promise<{ data: IBlog[] | null }> => {
-  const response = await axiosInstance.get<{ data: IBlog[] | null }>("/blog");
-  return response.data;
-};
-
-export const getSingleBlog = async (blogId: number): Promise<IBlog> => {
-  const response = await axiosInstance.get<IBlog>(`/blog/${blogId}`);
-  return response.data;
-};
-
-interface IResponse<T = undefined> {
-  status: boolean;
-  message?: string;
-  data?: T;
-}
 
 export const createNewBlog = async (
   blogInfo: Partial<IBlog>
@@ -45,35 +25,23 @@ export const createNewBlog = async (
     "/blog",
     blogInfo
   );
-  console.log({ response });
   return response.data;
 };
 
 // Comments API
-export const getComments = async (blogId: number): Promise<IComment[]> => {
-  const response = await axiosInstance.get<IComment[]>(`/comment/${blogId}`);
-  return response.data;
-};
-
 export const postNewComment = async (
   comment: Partial<IComment>,
-  blogId: number
-): Promise<IComment> => {
-  const response = await axiosInstance.post<IComment>(
-    `/comment/${blogId}`,
-    comment
-  );
+  blogId: string
+): Promise<IResponse<IComment> | AxiosError<any>> => {
+  const response = await axiosInstance.post(`/comment/${blogId}`, comment);
   return response.data;
 };
 
 // Like API
-export const getLikes = async (blogId: number): Promise<ILike[]> => {
-  const response = await axiosInstance.get<ILike[]>(`/like/${blogId}`);
-  return response.data;
-};
-
-export const postNewLike = async (blogId: number): Promise<ILike> => {
-  const response = await axiosInstance.post<ILike>(`/like/${blogId}`);
+export const postNewLike = async (
+  blogId: string
+): Promise<IResponse<undefined> | AxiosError<any>> => {
+  const response = await axiosInstance.post(`/like/${blogId}`);
   return response.data;
 };
 
