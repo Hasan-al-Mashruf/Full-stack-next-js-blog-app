@@ -13,13 +13,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ISession, IUser } from "@/types/types.global";
+import { ISession } from "@/types/types.global";
 
-interface PageProps {
-  session: ISession | null;
-}
-
-const Profile: FC<PageProps> = ({ session }) => {
+const Profile: FC<{ user: ISession }> = ({ user }) => {
   const profileMenuItems = [
     {
       label: "My Profile",
@@ -53,14 +49,14 @@ const Profile: FC<PageProps> = ({ session }) => {
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarImage
-            src={session?.image ?? "https://github.com/shadcn.png"}
+            src={user?.image ?? "https://github.com/shadcn.png"}
             alt="@shadcn"
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{session?.name ?? "My Account"}</DropdownMenuLabel>
+        <DropdownMenuLabel>{user?.name ?? "My Account"}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {profileMenuItems.map((item, index) => (

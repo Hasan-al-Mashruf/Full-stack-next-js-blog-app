@@ -1,12 +1,12 @@
 import Profile from "./Profile";
-import { getCurrentSession } from "@/lib/getCurrentUser";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 import { Search } from "lucide-react";
 
 export async function Header() {
-  const session = await getCurrentSession();
+  const user = await getCurrentUser();
   return (
     <>
-      {session?.name}
+      {user?.name}
       <header className="flex shadow-sm py-3 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50">
         <div className="flex flex-wrap items-center justify-between lg:gap-y-4 gap-y-6 gap-x-4 w-full">
           <a href="javascript:void(0)">
@@ -113,7 +113,7 @@ export async function Header() {
             </ul>
           </div>
 
-          <Profile session={session} />
+          <Profile user={user} />
         </div>
       </header>
     </>

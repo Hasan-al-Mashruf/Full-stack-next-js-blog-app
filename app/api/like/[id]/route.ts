@@ -12,8 +12,9 @@ export async function POST(req: Request, { params }: { params: IParams }) {
         message: "User does not exist",
       });
     }
-    const blogId = params.id;
 
+    const blogId = params.id;
+    console.log({ user, blogId });
     // Check if the user already liked the blog
     const existingLike = await prisma.like.findFirst({
       where: {
@@ -21,7 +22,6 @@ export async function POST(req: Request, { params }: { params: IParams }) {
         userId: user.id,
       },
     });
-
     console.log({ existingLike });
     if (existingLike) {
       return NextResponse.json(
@@ -32,7 +32,7 @@ export async function POST(req: Request, { params }: { params: IParams }) {
         { status: 400 }
       );
     }
-
+    // Create a new like
     await prisma.like.create({
       data: {
         blogId,

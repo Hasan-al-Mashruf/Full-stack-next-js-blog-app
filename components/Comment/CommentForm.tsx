@@ -8,11 +8,12 @@ import toast from "react-hot-toast";
 import { Button } from "../ui/button";
 import { FC, useEffect, useState } from "react";
 
+interface Inputs {
+  content: string;
+}
+
 const CommentForm: FC<{ blogId: string }> = ({ blogId }) => {
   const [loader, setLoader] = useState(false);
-  type Inputs = {
-    content: string;
-  };
 
   const router = useRouter();
   const {

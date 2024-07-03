@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { IBlog, ICategory } from "@/types/types.global";
 import { ZodError, z } from "zod";
+import { getServerSession } from "next-auth";
 
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -21,12 +22,9 @@ export async function POST(req: Request) {
         message: "User does not exist",
       });
     }
-
     const requestData = await req.json();
     const parsedData = schema.parse(requestData);
     const { title, content, featuredImg, categories } = parsedData;
-
-    console.log({ title, content, featuredImg, categories });
 
     // Check if the blog already exists
     const existingBlog: IBlog | null = await prisma.blog.findUnique({
@@ -80,6 +78,8 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
+    const user = await getCurrentUser();
+    console.log({ user }, "user paisi bloig page a");
     const blogs: IBlog[] | [] = await prisma.blog.findMany({
       include: {
         categories: true,
@@ -96,7 +96,7 @@ export async function GET() {
         },
       },
     });
-    console.log({ blogs }, "i am good");
+
     return NextResponse.json({ status: true, data: blogs });
   } catch (error) {
     console.error("Error creating user:", error);

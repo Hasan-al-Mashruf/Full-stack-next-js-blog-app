@@ -1,10 +1,10 @@
-import { getSingleBlog } from "@/apis/apis";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IBlog, ICategory, IParams } from "@/types/types.global";
 import parse from "html-react-parser";
 import React, { FC } from "react";
 import CommentCard from "@/components/Comment/CommentCard";
 import CommentForm from "@/components/Comment/CommentForm";
+import { getSingleBlog } from "@/apis/serverApis";
 
 const SingleBlogPage: FC<{ params: IParams }> = async ({ params }) => {
   const blogId = params?.id;
@@ -17,7 +17,6 @@ const SingleBlogPage: FC<{ params: IParams }> = async ({ params }) => {
     (category: ICategory) => category.name
   );
   const comments = data.comments;
-  console.log(data.comments);
   return (
     <div className="mx-auto w-1/2 max-w-3xl flex flex-col gap-5">
       <h1 className="text-5xl font-bold capitalize">{data?.title}</h1>
