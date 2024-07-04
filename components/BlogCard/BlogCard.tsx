@@ -8,9 +8,18 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
 import toast from "react-hot-toast";
-import { MessageCircleMore, ThumbsUp } from "lucide-react";
+import {
+  BookmarkMinus,
+  BookmarkPlus,
+  Grip,
+  MessageCircleMore,
+  ThumbsUp,
+} from "lucide-react";
+import BlogActions from "../BlogActions/BlogActions";
 
 const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
+  console.log({ blog });
+  const followingUser = blog?.user;
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
   const postANewLike = async (blogId: string) => {
@@ -55,7 +64,7 @@ const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
         <span className="text-gray-900 font-medium text-sm">CodeX</span>
       </div>
       <div className="flex justify-between gap-8">
-        <div>
+        <div className="flex-1">
           <div className="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">
             <Link
               href={`/blog/${blog.id}`}
@@ -65,29 +74,35 @@ const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
             </Link>
           </div>
           {parse(blog?.content)}
-          <div className="flex items-center mt-4 gap-3">
-            <span className="text-gray-500 text-sm">Apr 1</span>
-            <div className="flex items-center">
-              <Button
-                onClick={() => postANewLike(blog.id)}
-                disabled={isLiked}
-                className="p-0"
-                variant={"ghost"}
-              >
-                <ThumbsUp className="w-4" />
-                {blog?.like?.length}
-              </Button>
-            </div>
-            <Link href={`/blog/${blog.id}/#commentSection`}>
-              <div className="flex items-center cursor-pointer">
-                <MessageCircleMore className="w-4" />
-
-                <span className=" text-gray-500 text-sm">
-                  {" "}
-                  {blog?.comments?.length}
-                </span>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center mt-4 gap-3">
+              <span className="text-gray-500 text-sm">Apr 1</span>
+              <div className="flex items-center">
+                <Button
+                  onClick={() => postANewLike(blog.id)}
+                  disabled={isLiked}
+                  className="p-0"
+                  variant={"ghost"}
+                >
+                  <ThumbsUp className="w-4" />
+                  {blog?.like?.length}
+                </Button>
               </div>
-            </Link>
+              <Link href={`/blog/${blog.id}/#commentSection`}>
+                <div className="flex items-center cursor-pointer">
+                  <MessageCircleMore className="w-4" />
+
+                  <span className=" text-gray-500 text-sm">
+                    {" "}
+                    {blog?.comments?.length}
+                  </span>
+                </div>
+              </Link>
+            </div>
+            <BlogActions
+              blogId={blog.id}
+              followingUserId={followingUser?.id!}
+            />
           </div>
         </div>
         <div className="w-[200px]">

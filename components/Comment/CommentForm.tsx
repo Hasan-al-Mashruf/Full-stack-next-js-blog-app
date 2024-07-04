@@ -59,8 +59,6 @@ const CommentForm: FC<{ blogId: string }> = ({ blogId }) => {
     setIsDisabled(true);
   }, [watch("content")]);
 
-  console.log({ isDisabled });
-
   return (
     <form
       className="max-w-2xl bg-white rounded-lg border p-2 mx-auto mt-20"

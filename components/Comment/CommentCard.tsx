@@ -2,7 +2,6 @@ import { IComment } from "@/types/types.global";
 import { FC } from "react";
 
 const CommentCard: FC<{ comment: IComment }> = ({ comment }) => {
-  console.log({ comment });
   return (
     <section id="commentSection">
       <div className="border rounded-md p-3 ml-3 my-3">
