@@ -1,6 +1,7 @@
 import Profile from "./Profile";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import { Search } from "lucide-react";
+import SearchBox from "../SearchBox/SearchBox";
 
 export async function Header() {
   const user = await getCurrentUser();
@@ -19,11 +20,7 @@ export async function Header() {
             <button className="flex items-center justify-center px-3">
               <Search className="text-red-400 w-5 h-6" />
             </button>
-            <input
-              type="email"
-              placeholder="Search..."
-              className="w-full outline-none bg-white text-sm px-5 py-3"
-            />
+            <SearchBox />
           </div>
         </div>
         <div
