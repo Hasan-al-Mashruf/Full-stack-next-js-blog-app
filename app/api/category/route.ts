@@ -8,9 +8,12 @@ export async function GET() {
     return NextResponse.json({ status: true, data: categories });
   } catch (error) {
     console.error("Error creating user:", error);
-    return NextResponse.json({
-      status: false,
-      message: "Internal Server Error",
-    });
+    return NextResponse.json(
+      {
+        status: false,
+        message: "Internal Server Error",
+      },
+      { status: 400 }
+    );
   }
 }

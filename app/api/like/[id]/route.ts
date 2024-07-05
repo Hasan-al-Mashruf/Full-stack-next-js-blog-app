@@ -1,52 +1,36 @@
 import { prisma } from "@/lib/db";
-import { getCurrentUser } from "@/lib/getCurrentUser";
-import { IParams } from "@/types/types.global";
-import { NextResponse } from "next/server";
+import { userMiddleware } from "@/middlwere/userValidation/userValidation";
+import { IParams, IUser } from "@/types/types.global";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request, { params }: { params: IParams }) {
-  const user = await getCurrentUser();
+export async function POST(req: NextRequest, { params }: { params: IParams }) {
   try {
-    if (!user) {
-      return NextResponse.json({
-        status: false,
-        message: "User does not exist",
-      });
-    }
-
+    const { id: userId } = (await userMiddleware()) as IUser;
     const blogId = params.id;
-    console.log({ user, blogId });
     // Check if the user already liked the blog
     const existingLike = await prisma.like.findFirst({
       where: {
         blogId,
-        userId: user.id,
+        userId,
       },
     });
-    console.log({ existingLike });
-    if (existingLike) {
-      return NextResponse.json(
-        {
-          status: false,
-          message: "You can like once",
-        },
-        { status: 400 }
-      );
-    }
+
+    if (existingLike) throw new Error("You can like once");
     // Create a new like
     await prisma.like.create({
       data: {
         blogId,
-        userId: user.id,
+        userId,
       },
     });
 
     return NextResponse.json({ status: true });
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error(error);
     return NextResponse.json(
       {
         status: false,
-        message: "Internal Server Error",
+        message: (error as any).message ?? "Internal Server Error",
       },
       { status: 400 }
     );

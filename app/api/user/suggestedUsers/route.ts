@@ -1,25 +1,33 @@
 import { prisma } from "@/lib/db";
-import { getCurrentUser } from "@/lib/getCurrentUser";
+import { userMiddleware } from "@/middlwere/userValidation/userValidation";
+import { IUser } from "@/types/types.global";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const user = await getCurrentUser();
-    console.log({ user }, "user paisi suuggested page a");
-
+    const user = (await userMiddleware()) as IUser;
+    const followingCatIds = user.followingCat?.map((cat) => cat.id) || [];
     const suggestedUsers = await prisma.user.findMany({
       include: {
         followingCat: true,
+        follower: true,
+        following: true,
       },
       where: {
+        // Exclude current user
         id: { not: user?.id },
+        follower: {
+          none: {
+            followingId: user?.id,
+          },
+        },
         OR: [
           {
             followingCat: {
-              // using some to find records that at least have one match
+              // Using some to find records that at least have one match
               some: {
                 id: {
-                  in: user?.followingCat.map((cat) => cat.id),
+                  in: followingCatIds,
                 },
               },
             },
@@ -28,7 +36,8 @@ export async function GET() {
             followingCat: {
               some: {
                 id: {
-                  notIn: user?.followingCat.map((cat) => cat.id),
+                  // shpowing all records if not found any
+                  notIn: followingCatIds,
                 },
               },
             },
@@ -42,6 +51,7 @@ export async function GET() {
         },
       },
     });
+    console.log(suggestedUsers);
     return NextResponse.json({ status: true, data: suggestedUsers });
   } catch (error) {
     console.error(error);
