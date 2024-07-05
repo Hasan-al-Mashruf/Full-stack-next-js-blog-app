@@ -1,5 +1,5 @@
 "use client";
-import { followUser, showLess, showMore } from "@/apis/apis";
+import { followUser, reportUser, showLess, showMore } from "@/apis/apis";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,16 +13,15 @@ import { Cloud, CreditCard, Keyboard, LifeBuoy, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
-const BlogActions: FC<{ blogId: string; followingUserId: string }> = ({
+const BlogActions: FC<{ blogId: string; authorId: string }> = ({
   blogId,
-  followingUserId,
+  authorId,
 }) => {
   const router = useRouter();
 
   const addNewfavCat = async () => {
     try {
       const response = await showMore(blogId);
-      console.log({ response });
       if (response.status) {
         router.refresh();
       }
@@ -34,7 +33,6 @@ const BlogActions: FC<{ blogId: string; followingUserId: string }> = ({
   const removefavCat = async () => {
     try {
       const response = await showLess(blogId);
-      console.log({ response });
       if (response.status) {
         router.refresh();
       }
@@ -45,8 +43,18 @@ const BlogActions: FC<{ blogId: string; followingUserId: string }> = ({
 
   const followNewUser = async () => {
     try {
-      const response = await followUser(followingUserId);
-      console.log({ response });
+      const response = await followUser(authorId);
+      if (response.status) {
+        router.refresh();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const reportNewUser = async () => {
+    try {
+      const response = await reportUser(authorId);
       if (response.status) {
         router.refresh();
       }
@@ -74,7 +82,7 @@ const BlogActions: FC<{ blogId: string; followingUserId: string }> = ({
     {
       label: "Report Author",
       icon: LifeBuoy, // Replace with appropriate icon
-      action: () => console.log("Navigate to Support"),
+      action: reportNewUser,
     },
   ];
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { getCurrentSession } from "@/lib/getCurrentUser";
 import WriteABlogForm from "./WriteABlogForm";
-import { getCategories } from "@/apis/apis";
+import { getCategories } from "@/apis/serverApis";
 
 const writeABlog = async () => {
   const sessionPromise = getCurrentSession();

@@ -19,7 +19,7 @@ import BlogActions from "../BlogActions/BlogActions";
 
 const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
   console.log({ blog });
-  const followingUser = blog?.user;
+  const author = blog?.user;
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
   const postANewLike = async (blogId: string) => {
@@ -99,10 +99,7 @@ const BlogCard: FC<{ blog: IBlog; user: any }> = ({ blog, user }) => {
                 </div>
               </Link>
             </div>
-            <BlogActions
-              blogId={blog.id}
-              followingUserId={followingUser?.id!}
-            />
+            <BlogActions blogId={blog.id} authorId={author?.id!} />
           </div>
         </div>
         <div className="w-[200px]">

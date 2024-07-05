@@ -21,8 +21,9 @@ export const getCurrentUser = async () => {
       email: true,
       image: true,
       followingCat: true,
+      reported: true,
+      reporter: true,
     },
   });
-
   return existingUser;
 };

@@ -47,9 +47,9 @@ model VerificationToken {
 }
 
 model User {
-  id            String     @default(cuid()) @id
+  id            String    @default(cuid()) @id
   name          String
-  email         String     @unique
+  email         String    @unique
   password      String?
   image         String?
   emailVerified DateTime?
@@ -60,33 +60,32 @@ model User {
   following     Follow[]  @relation("UserFollowing")
   comment       Comment[]
   like          Like[]
-  reporter      Report[]  @relation("UserReporter")
+  reporter      Report[]  @relation("UserReporters")
   reported      Report[]  @relation("UserReported")
   followingCat  Category[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Follow {
   id           String   @id @default(cuid())
   followerId   String
   followingId  String
-  follower     User @relation("UserFollowers", fields: [followerId], references: [id])
-  following    User @relation("UserFollowing", fields: [followingId], references: [id])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  follower     User     @relation("UserFollowers", fields: [followerId], references: [id])
+  following    User     @relation("UserFollowing", fields: [followingId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   @@unique([followerId, followingId])
 }
 
 model Blog {
-  id          String     @default(cuid()) @id
-  title       String     @unique
+  id          String    @default(cuid()) @id
+  title       String    @unique
   content     String
   featuredImg String
   published   Boolean   @default(false)
-
   userId      String
-    user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
   like        Like[]
   categories  Category[]
   comments    Comment[]
@@ -130,9 +129,9 @@ model Report {
   id           String     @default(cuid()) @id
   reporterId   String
   reportedId   String
-  reporter      User     @relation("UserReporter", fields: [reporterId], references: [id])
-  reported      User     @relation("UserReported", fields: [reportedId], references: [id])
-  createdAt     DateTime  @default(now()) 
-  updatedAt     DateTime  @updatedAt
+  reporter     User     @relation("UserReporters", fields: [reporterId], references: [id])
+  reported     User     @relation("UserReported", fields: [reportedId], references: [id])
+  createdAt    DateTime  @default(now()) 
+  updatedAt    DateTime  @updatedAt
   @@unique([reporterId ,reportedId])
 }

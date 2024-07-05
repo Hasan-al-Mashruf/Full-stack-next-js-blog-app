@@ -2,13 +2,14 @@ import RecentBlogs from "@/components/RecentBlogs/RecentBlogs";
 import { Suspense } from "react";
 import Loading from "./loading";
 import UserSuggestion from "@/components/UserSuggestion/UserSuggestion";
+import Pagination from "@/components/Pagination/Pagination";
 
-const Home = () => {
+const Home = ({ searchParams }) => {
   return (
     <div className="grid grid-cols-4 gap-8">
       <div className="col-span-3">
         <Suspense fallback={<Loading />}>
-          <RecentBlogs />
+          <RecentBlogs searchParams={searchParams} />
         </Suspense>
       </div>
       <div>

@@ -54,3 +54,23 @@ export const postNewReport = async (
   );
   return response.data;
 };
+
+export const showMore = async (blogId: string) => {
+  const response = await axiosInstance.put(`/user/showMoreCat/${blogId}`);
+  return response.data;
+};
+
+export const showLess = async (blogId: string) => {
+  const response = await axiosInstance.put(`/user/showLessCat/${blogId}`);
+  return response.data;
+};
+
+export const followUser = async (followingUserId: string) => {
+  const response = await axiosInstance.put(`/user/follow/${followingUserId}`);
+  return response.data;
+};
+
+export const reportUser = async (reportedUserId: string) => {
+  const response = await axiosInstance.put(`/user/report/${reportedUserId}`);
+  return response.data;
+};

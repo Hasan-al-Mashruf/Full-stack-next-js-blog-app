@@ -1,6 +1,7 @@
 import { IUser } from "@/types/types.global";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FC } from "react";
+import FollowBTN from "./FollowBTN";
 
 const UserSuggestionCard: FC<{ suggestedUser: Partial<IUser> }> = ({
   suggestedUser,
@@ -15,7 +16,7 @@ const UserSuggestionCard: FC<{ suggestedUser: Partial<IUser> }> = ({
         <div className="flex gap-2">
           <div>{suggestedUser?.name}</div>
           <span>.</span>
-          <span className="underline">Follow</span>
+          <FollowBTN authorId={suggestedUser?.id!} />
         </div>
       </div>
     </div>
